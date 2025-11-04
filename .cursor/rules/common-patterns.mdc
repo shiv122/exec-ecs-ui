@@ -1,0 +1,34 @@
+---
+description: Common code patterns and examples
+alwaysApply: false
+---
+
+## Tauri Command Invocation
+```javascript
+import { invoke } from '@tauri-apps/api/core'
+
+const result = await invoke('command_name', { param1: value1 })
+```
+
+## Event Listening
+```javascript
+import { listen } from '@tauri-apps/api/event'
+
+const unlisten = await listen('event-name', (event) => {
+  // Handle event
+})
+```
+
+## Pinia Store Usage
+```javascript
+import { useAwsStore } from '~/stores/aws'
+const store = useAwsStore()
+await store.ssoLogin(profile)
+```
+
+## Nuxt UI Component
+```vue
+<UButton :loading="isLoading" @click="handleClick">
+  Click me
+</UButton>
+```

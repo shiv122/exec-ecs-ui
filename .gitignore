@@ -1,0 +1,86 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+dist
+.nuxt
+.nitro
+.output
+.cache
+.data
+src-tauri/target
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Rust
+.cargo
+**/*.rs.bk
+target/
+
+# Tauri
+src-tauri/target
+src-tauri/gen
+*.app
+*.dmg
+*.exe
+*.deb
+*.rpm
+*.AppImage
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.temp/
+
+# Coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Misc
+*.pem
+*.key
+.bundle/
+.vendor/
+
+
+DS_Store
+RELEASE.md

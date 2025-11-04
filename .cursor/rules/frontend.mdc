@@ -1,0 +1,45 @@
+---
+description: Frontend development guidelines using Nuxt 4 and Nuxt UI 4
+alwaysApply: true
+---
+
+## Technology Stack
+- **Nuxt 4** with Vue 3 Composition API
+- **Nuxt UI 4** (`@nuxt/ui`) for all UI components
+- Use `<script setup>` syntax for all Vue components
+- Use TypeScript for type safety (`.ts` files) or JavaScript (`.js` files) as appropriate
+
+## Component Structure
+- Use Composition API with `<script setup>`
+- Use `definePageMeta` for page configuration
+- Prefer composables for reusable logic
+- Use Pinia stores for state management
+
+## Nuxt UI Components
+- Always use Nuxt UI 4 components (UButton, UCard, UInput, etc.)
+- Use `Icon` component from Nuxt UI for icons
+- Follow Nuxt UI theming and styling patterns
+- Use dark mode classes when appropriate: `dark:bg-gray-900`
+
+## Styling
+- Use Tailwind CSS classes (provided by Nuxt UI)
+- Prefer utility classes over custom CSS
+- Use responsive design: `sm:`, `md:`, `lg:` breakpoints
+- Follow mobile-first approach
+
+## State Management
+- Use Pinia stores for global state
+- Use `ref` and `computed` for component-level reactive state
+- Use `useState` for SSR-safe state when needed
+
+## Async Operations
+- Use `async/await` for asynchronous operations
+- Handle errors with try/catch blocks
+- Show loading states during async operations
+- Use `invoke` from `@tauri-apps/api/core` for Tauri commands
+
+## Naming Conventions
+- Components: PascalCase (e.g., `AwsProfilePicker.vue`)
+- Composables: camelCase with `use` prefix (e.g., `useAws.ts`)
+- Stores: camelCase (e.g., `aws.js`)
+- Pages: kebab-case (e.g., `browse.vue`)

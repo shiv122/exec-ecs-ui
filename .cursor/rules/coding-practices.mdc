@@ -1,0 +1,29 @@
+---
+description: General coding best practices and quality standards
+alwaysApply: true
+---
+
+## Error Handling
+- Always handle errors gracefully
+- Show user-friendly error messages
+- Log errors for debugging
+
+## Performance
+- Use lazy loading for routes when appropriate
+- Debounce user inputs when needed
+- Optimize terminal rendering
+
+## Security
+- Validate all user inputs
+- Sanitize command arguments
+- Never execute arbitrary shell commands
+
+## Code Quality
+- Keep components small and focused
+- Use composables for reusable logic
+- Follow Rust best practices for memory safety
+- Write clean, maintainable, and well-documented code
+
+## Resource Management
+- Ensure proper cleanup of resources (event listeners, processes, terminals)
+- Use TypeScript/JavaScript consistently (don't mix patterns)

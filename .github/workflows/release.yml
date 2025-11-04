@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.5.0)'
+        required: true
+        type: string
+
+jobs:
+  publish-tauri:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest # Arm based macs
+            args: --target aarch64-apple-darwin
+          - platform: macos-latest # Intel based macs
+            args: --target x86_64-apple-darwin
+          - platform: ubuntu-22.04
+            args: ""
+          - platform: windows-latest
+            args: ""
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.2.22
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: Install dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
+
+      - name: Install frontend dependencies
+        run: bun install
+
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: 'Exec ECS UI v__VERSION__'
+          releaseBody: |
+            ## Installation Instructions
+            
+            ### macOS
+            - Download the `.dmg` file for your architecture (Apple Silicon or Intel)
+            - Open the `.dmg` file and drag the app to Applications
+            - **Important**: Run this command once before launching (to remove quarantine attribute):
+              ```bash
+              xattr -cr /Applications/Exec\ ECS\ UI.app
+              ```
+            - Open the app from Applications
+            
+            ### Windows
+            - Download the `.msi` or `.exe` installer
+            - Run the installer and follow the setup wizard
+            - Launch from Start Menu or Desktop shortcut
+            
+            ### Linux
+            - Download the `.AppImage`, `.deb`, or `.rpm` file
+            - For `.deb`: `sudo dpkg -i exec-ecs-ui_*.deb`
+            - For `.rpm`: `sudo rpm -i exec-ecs-ui_*.rpm`
+            - For `.AppImage`: Make executable and run:
+              ```bash
+              chmod +x exec-ecs-ui_*.AppImage
+              ./exec-ecs-ui_*.AppImage
+              ```
+            
+            ## Requirements
+            - AWS CLI v2 installed
+            - Session Manager Plugin installed
+            - AWS SSO profiles configured in `~/.aws/config`
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}

@@ -1,0 +1,24 @@
+---
+description: Project file organization and structure
+alwaysApply: false
+---
+
+## Frontend Structure
+```
+app/
+├── pages/          # File-based routing
+├── components/     # Reusable Vue components
+├── stores/         # Pinia stores
+├── composables/    # Vue composables
+├── plugins/        # Nuxt plugins
+└── layouts/        # Layout components
+```
+
+## Backend Structure
+```
+src-tauri/src/
+├── main.rs        # Entry point
+├── lib.rs         # Library root, Tauri setup
+├── aws.rs         # AWS CLI commands
+└── terminal.rs    # Terminal/PTY management
+```

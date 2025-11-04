@@ -1,0 +1,8 @@
+---
+description: Enforce the use of bun as the package manager
+alwaysApply: true
+---
+
+- Always use `bun` for all package management operations
+- Use `bun install`, `bun add`, `bun remove` (not npm, pnpm, or yarn)
+- Never use npm, pnpm, or yarn commands

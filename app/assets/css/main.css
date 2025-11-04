@@ -1,0 +1,75 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+	--font-heading: "Montserrat", sans-serif;
+	--font-sans: "Inter", sans-serif;
+
+	/* Custom accent color scale - #DE5D83 based */
+	--color-accent-50: #fef2f7;
+	--color-accent-100: #fde6ef;
+	--color-accent-200: #fbcce0;
+	--color-accent-300: #f9a6c9;
+	--color-accent-400: #f573ab;
+	--color-accent-500: #DE5D83;
+	--color-accent-600: #c94d6f;
+	--color-accent-700: #a83e5a;
+	--color-accent-800: #8a3349;
+	--color-accent-900: #712d3e;
+	--color-accent-950: #411722;
+}
+
+@layer base {
+	* {
+		-webkit-tap-highlight-color: transparent;
+	}
+}
+
+@layer utilities {
+	img{
+		user-select: none;
+		-webkit-user-drag: none;
+	}
+	.flex-center {
+		@apply flex justify-center items-center;
+	}
+	.absolute-center-h {
+		@apply left-1/2 transform -translate-x-1/2;
+	}
+	.absolute-center-v {
+		@apply top-1/2 transform -translate-y-1/2;
+	}
+	
+	/* Ensure accent color works in dark mode */
+	.dark .text-accent-500 {
+		color: var(--color-accent-400);
+	}
+	
+	.dark .bg-accent-500 {
+		background-color: var(--color-accent-400);
+	}
+}
+
+.page-enter-active,
+.page-leave-active {
+	@apply transition-opacity ease-in-out duration-300;
+}
+.layout-enter-active,
+.layout-leave-active {
+	@apply transition-opacity ease-in-out duration-500;
+}
+.page-enter-from,
+.page-leave-to,
+.layout-enter-from,
+.layout-leave-to {
+	@apply opacity-0;
+}
+
+/* xterm.js terminal padding to prevent text cutoff */
+#xterm-container .xterm {
+	padding-bottom: 2rem;
+}
+
+#xterm-container .xterm-viewport {
+	padding-bottom: 2rem;
+}

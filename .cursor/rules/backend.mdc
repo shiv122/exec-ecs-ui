@@ -1,0 +1,42 @@
+---
+description: Backend development guidelines using Tauri 2 and Rust
+alwaysApply: true
+---
+
+## Technology Stack
+- **Tauri 2** for desktop application shell
+- **Rust** for backend commands and system integration
+- Use `tauri::command` for exposing Rust functions to frontend
+
+## Command Functions
+- All Tauri commands should use `#[command]` attribute
+- Use proper error types: `Result<T, String>` or custom error types
+- Return meaningful error messages
+- Use async functions when dealing with I/O operations
+
+## Error Handling
+- Use `Result` types for fallible operations
+- Provide descriptive error messages
+- Use `map_err` to convert errors to strings for Tauri
+- Log errors appropriately
+
+## Async/Await
+- Use `tokio` for async runtime
+- Use `tokio::spawn` for concurrent operations
+- Properly handle async streams and channels
+
+## Process Management
+- Use `tokio::process::Command` for spawning processes
+- Properly manage stdin/stdout/stderr pipes
+- Clean up resources when sessions end
+- Use channels for communication between tasks
+
+## State Management
+- Use `Mutex` or `Arc<Mutex<T>>` for shared state
+- Store active sessions and their resources
+- Clean up state when sessions terminate
+
+## Naming Conventions
+- Functions: snake_case (e.g., `sso_login`)
+- Modules: snake_case (e.g., `aws.rs`)
+- Types: PascalCase (e.g., `TerminalState`)
