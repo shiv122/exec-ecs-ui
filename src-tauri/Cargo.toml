@@ -1,6 +1,6 @@
 [package]
 name = "exec-ecs-ui"
-version = "1.5.0"
+version = "1.0.0"
 description = "ECS Exec UI - Desktop application for AWS ECS Exec sessions"
 authors = [ "shiv122" ]
 license = "MIT"

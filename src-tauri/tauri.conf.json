@@ -32,7 +32,7 @@
 		"devUrl": "http://localhost:3000"
 	},
 	"productName": "Exec ECS UI",
-	"version": "1.5.0",
+	"version": "1.0.0",
 	"identifier": "com.shiv122.exec-ecs-ui",
 	"plugins": {},
 	"app": {
