@@ -6,6 +6,52 @@ use tokio::process::{Child, Command as TokioCommand};
 use tokio::sync::Mutex;
 use serde::{Deserialize, Serialize};
 
+// Helper function to get PATH with common locations
+fn get_path_with_common_locations() -> String {
+    let mut paths = Vec::new();
+    
+    // Get existing PATH
+    if let Ok(existing_path) = std::env::var("PATH") {
+        paths.push(existing_path);
+    }
+    
+    // Add common locations for macOS
+    #[cfg(target_os = "macos")]
+    {
+        paths.push("/usr/local/bin".to_string());
+        paths.push("/opt/homebrew/bin".to_string()); // Homebrew on Apple Silicon
+        paths.push("/opt/homebrew/opt/awscli/bin".to_string()); // AWS CLI via Homebrew
+        paths.push("/usr/bin".to_string());
+        paths.push("/bin".to_string());
+        paths.push("$HOME/.local/bin".to_string());
+    }
+    
+    // Add common locations for Linux
+    #[cfg(target_os = "linux")]
+    {
+        paths.push("/usr/local/bin".to_string());
+        paths.push("/usr/bin".to_string());
+        paths.push("/bin".to_string());
+        paths.push("$HOME/.local/bin".to_string());
+    }
+    
+    // Add common locations for Windows
+    #[cfg(target_os = "windows")]
+    {
+        if let Ok(program_files) = std::env::var("ProgramFiles") {
+            paths.push(format!("{}\\Amazon\\AWSCLIV2", program_files));
+        }
+        if let Ok(program_files_x86) = std::env::var("ProgramFiles(x86)") {
+            paths.push(format!("{}\\Amazon\\AWSCLIV2", program_files_x86));
+        }
+        if let Ok(local_app_data) = std::env::var("LocalAppData") {
+            paths.push(format!("{}\\Programs\\Amazon\\AWSCLIV2", local_app_data));
+        }
+    }
+    
+    paths.join(if cfg!(target_os = "windows") { ";" } else { ":" })
+}
+
 struct SsoLoginState {
     processes: HashMap<String, Child>,
 }
@@ -25,8 +71,11 @@ fn get_sso_state() -> &'static Mutex<Option<SsoLoginState>> {
 }
 
 async fn check_aws_cli() -> Result<(), String> {
+    let path = get_path_with_common_locations();
+    
     let output = TokioCommand::new("aws")
         .arg("--version")
+        .env("PATH", &path)
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .output()
@@ -51,8 +100,11 @@ async fn run_json_async(cmd: &str, args: &[&str]) -> Result<Value, String> {
     let full_command = format!("{} {}", cmd, args.join(" "));
     eprintln!("[DEBUG] Executing command: {}", full_command);
     
+    let path = get_path_with_common_locations();
+    
     let process = TokioCommand::new(cmd)
         .args(args)
+        .env("PATH", &path)
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .spawn()
@@ -137,8 +189,11 @@ pub async fn sso_login(profile: String) -> Result<String, String> {
     // Check AWS CLI before attempting login
     check_aws_cli().await?;
 
+    let path = get_path_with_common_locations();
+    
     let mut cmd = TokioCommand::new("aws");
-    cmd.arg("sso")
+    cmd.env("PATH", &path)
+        .arg("sso")
         .arg("login")
         .arg("--profile")
         .arg(&profile);
@@ -213,9 +268,12 @@ pub async fn cancel_sso_login(profile: String) -> Result<(), String> {
 
 #[command]
 pub fn list_aws_profiles() -> Result<Vec<String>, String> {
+    let path = get_path_with_common_locations();
+    
     // First check if AWS CLI is available
     let aws_check = std::process::Command::new("aws")
         .arg("--version")
+        .env("PATH", &path)
         .output();
     
     match aws_check {
@@ -438,8 +496,11 @@ pub async fn check_required_tools() -> Result<Vec<ToolStatus>, String> {
 }
 
 async fn check_tool(cmd: &str, args: &[&str]) -> Result<String, String> {
+    let path = get_path_with_common_locations();
+    
     let output = TokioCommand::new(cmd)
         .args(args)
+        .env("PATH", &path)
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .output()

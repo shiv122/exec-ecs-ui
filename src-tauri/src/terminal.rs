@@ -35,8 +35,38 @@ pub async fn start_exec_session(
     container: String,
     shell_cmd: String,
 ) -> Result<(), String> {
+    // Get PATH with common locations
+    let path = {
+        let mut paths = Vec::new();
+        if let Ok(existing_path) = std::env::var("PATH") {
+            paths.push(existing_path);
+        }
+        #[cfg(target_os = "macos")]
+        {
+            paths.push("/usr/local/bin".to_string());
+            paths.push("/opt/homebrew/bin".to_string());
+            paths.push("/opt/homebrew/opt/awscli/bin".to_string());
+            paths.push("/usr/bin".to_string());
+            paths.push("/bin".to_string());
+        }
+        #[cfg(target_os = "linux")]
+        {
+            paths.push("/usr/local/bin".to_string());
+            paths.push("/usr/bin".to_string());
+            paths.push("/bin".to_string());
+        }
+        #[cfg(target_os = "windows")]
+        {
+            if let Ok(program_files) = std::env::var("ProgramFiles") {
+                paths.push(format!("{}\\Amazon\\AWSCLIV2", program_files));
+            }
+        }
+        paths.join(if cfg!(target_os = "windows") { ";" } else { ":" })
+    };
+    
     let mut cmd = TokioCommand::new("aws");
-    cmd.arg("ecs")
+    cmd.env("PATH", &path)
+        .arg("ecs")
         .arg("execute-command")
         .arg("--cluster")
         .arg(&cluster)

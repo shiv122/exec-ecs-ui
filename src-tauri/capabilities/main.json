@@ -19,13 +19,30 @@
 			"identifier": "shell:allow-execute",
 			"allow": [
 				{
-					"name": "exec-sh",
+					"name": "aws",
+					"cmd": "aws",
+					"args": true,
+					"sidecar": false
+				},
+				{
+					"name": "session-manager-plugin",
+					"cmd": "session-manager-plugin",
+					"args": true,
+					"sidecar": false
+				},
+				{
+					"name": "sh",
 					"cmd": "sh",
 					"args": [
-						"-c",
-						{
-							"validator": "\\S+"
-						}
+						"-c"
+					],
+					"sidecar": false
+				},
+				{
+					"name": "bash",
+					"cmd": "bash",
+					"args": [
+						"-c"
 					],
 					"sidecar": false
 				}
